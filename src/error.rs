@@ -15,12 +15,16 @@ impl Error {
         self.ctx.get_context()
     }
 
-    pub fn api_error(errors: Vec<String>) -> Self {
-        ErrorKind::ApiError { errors }.into()
+    pub fn bad_request(errors: Vec<String>) -> Self {
+        ErrorKind::BadRequest { errors }.into()
     }
 
     pub fn unexpected_status(status_code: reqwest::StatusCode) -> Self {
         ErrorKind::UnexpectedStatus { status_code }.into()
+    }
+
+    pub fn rate_limit_exceeded() -> Self {
+        ErrorKind::RateLimitExceeded.into()
     }
 }
 
@@ -42,14 +46,17 @@ impl fmt::Display for Error {
 
 #[derive(Clone, Debug, Eq, PartialEq, Fail)]
 pub enum ErrorKind {
-    #[fail(display = "NYT API did not like our request: {:#?}", errors)]
-    ApiError { errors: Vec<String> },
+    #[fail(display = "bad request: {:#?}", errors)]
+    BadRequest { errors: Vec<String> },
 
     #[fail(
         display = "unexpected status code received from NYT: {:#?}",
         status_code
     )]
     UnexpectedStatus { status_code: reqwest::StatusCode },
+
+    #[fail(display = "rate limit exceeded, please wait to try again")]
+    RateLimitExceeded,
 
     #[fail(display = "serde error: {}", error)]
     SerdeError { error: String },

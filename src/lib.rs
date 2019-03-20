@@ -18,23 +18,6 @@ struct NewYorkTimes {
     api_key: String,
 }
 impl NewYorkTimes {
-    fn request_and_check_status<A>(url: &String) -> Result<Response<A>>
-    where
-        A: Article + for<'a> Deserialize<'a>,
-    {
-        let mut response = reqwest::get(url)?;
-
-        match response.status() {
-            StatusCode::BAD_REQUEST => {
-                let body: Response<A> = response.json()?;
-                Err(Error::api_error(body.errors.unwrap_or(vec![])))
-            }
-            StatusCode::OK => Ok(response.json()?),
-
-            status_code => Err(Error::unexpected_status(status_code)),
-        }
-    }
-
     #[allow(dead_code)]
     pub fn new<S: Into<String>>(api_key: S) -> Self {
         Self {
@@ -88,6 +71,24 @@ impl NewYorkTimes {
         );
 
         NewYorkTimes::request_and_check_status(&url)
+    }
+
+    fn request_and_check_status<A>(url: &String) -> Result<Response<A>>
+    where
+        A: Article + for<'a> Deserialize<'a>,
+    {
+        let mut response = reqwest::get(url)?;
+
+        match response.status() {
+            StatusCode::TOO_MANY_REQUESTS => Err(Error::rate_limit_exceeded()),
+            StatusCode::BAD_REQUEST => {
+                let body: Response<A> = response.json()?;
+                Err(Error::bad_request(body.errors.unwrap_or(vec![])))
+            }
+            StatusCode::OK => Ok(response.json()?),
+
+            status_code => Err(Error::unexpected_status(status_code)),
+        }
     }
 }
 
