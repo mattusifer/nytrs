@@ -1,6 +1,6 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 #[allow(dead_code)]
 pub enum ShareType {
@@ -9,7 +9,7 @@ pub enum ShareType {
     Twitter,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 #[allow(dead_code)]
 pub enum MostPopularPeriod {

@@ -14,7 +14,7 @@ use response::{
 
 const NEW_YORK_TIMES: &str = "https://api.nytimes.com/svc";
 
-struct NewYorkTimes {
+pub struct NewYorkTimes {
     api_key: String,
 }
 impl NewYorkTimes {
