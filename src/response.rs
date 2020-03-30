@@ -58,7 +58,7 @@ pub struct ViewedArticle {
     pub r#type: String,
     pub uri: String,
     pub url: String,
-    pub views: u32,
+    pub views: Option<u32>,
 }
 impl Article for ViewedArticle {}
 
@@ -71,14 +71,14 @@ pub struct SharedArticle {
     pub asset_id: Option<u64>,
     pub byline: Option<String>,
     pub column: Option<String>,
-    pub count_type: String,
+    pub count_type: Option<String>,
     pub eta_id: Option<u64>,
     pub id: u64,
     pub media: Vec<Media>,
     pub nytdsection: String,
     pub published_date: String,
     pub section: String,
-    pub share_count: u32,
+    pub share_count: Option<u32>,
     pub source: String,
     pub subsection: Option<String>,
     pub title: String,

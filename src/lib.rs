@@ -36,8 +36,6 @@ impl NewYorkTimes {
             json!(period).as_str().unwrap(),
             self.api_key
         );
-        println!("url {}", url);
-
         NewYorkTimes::request_and_check_status(&url)
     }
 
@@ -86,7 +84,6 @@ impl NewYorkTimes {
                 Err(Error::bad_request(body.errors.unwrap_or(vec![])))
             }
             StatusCode::OK => Ok(response.json()?),
-
             status_code => Err(Error::unexpected_status(status_code)),
         }
     }
